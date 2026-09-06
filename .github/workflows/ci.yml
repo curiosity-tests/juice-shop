@@ -82,7 +82,7 @@ jobs:
         node-version: [22, 24, 26]
     steps:
       - name: "Check out Git repository"
-        if: github.repository == 'curiosity-tests/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
+        if: github.repository == 'juice-shop/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
         uses: crashappsec/action-checkout@main
         with:
           chalk: ${{ env.CHALK_ON }}
@@ -96,15 +96,15 @@ jobs:
           test -S "${CURIOSITY_SOCKET_NAME:?socket name unset}" || { echo "::error::co-hostd socket absent"; exit 1; }
 
       - name: "Use Node.js ${{ matrix.node-version }}"
-        if: github.repository == 'curiosity-tests/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
+        if: github.repository == 'juice-shop/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
         uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af #v4.1.0
         with:
           node-version: ${{ matrix.node-version }}
       - name: "Install application"
-        if: github.repository == 'curiosity-tests/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
+        if: github.repository == 'juice-shop/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
         run: npm install
       - name: "Execute frontend unit tests"
-        if: github.repository == 'curiosity-tests/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
+        if: github.repository == 'juice-shop/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
         uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e #v3.0.0
         with:
           shell: bash
@@ -112,13 +112,13 @@ jobs:
           max_attempts: 3
           command: npm run test:frontend:coverage
       - name: "Copy frontend unit test coverage data"
-        if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
+        if: github.repository == 'juice-shop/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
         run: |
           cp frontend/coverage/frontend/lcov.info frontend-lcov.info
           sed -i s/SF:/SF:frontend\\//g frontend-lcov.info
         shell: bash
       - name: "Upload frontend unit test coverage data"
-        if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
+        if: github.repository == 'juice-shop/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
         uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b #v4.5.0
         with:
           name: frontend-test-lcov
@@ -133,7 +133,7 @@ jobs:
         node-version: [22, 24, 26]
     steps:
       - name: "Check out Git repository"
-        if: github.repository == 'curiosity-tests/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
+        if: github.repository == 'juice-shop/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
         uses: crashappsec/action-checkout@main
         with:
           chalk: ${{ env.CHALK_ON }}
@@ -147,27 +147,27 @@ jobs:
           test -S "${CURIOSITY_SOCKET_NAME:?socket name unset}" || { echo "::error::co-hostd socket absent"; exit 1; }
 
       - name: "Use Node.js ${{ matrix.node-version }}"
-        if: github.repository == 'curiosity-tests/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
+        if: github.repository == 'juice-shop/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
         uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af #v4.1.0
         with:
           node-version: ${{ matrix.node-version }}
       - name: "Install application"
-        if: github.repository == 'curiosity-tests/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
+        if: github.repository == 'juice-shop/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
         run: npm install
       - name: "Execute server unit tests"
-        if: github.repository == 'curiosity-tests/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
+        if: github.repository == 'juice-shop/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
         uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e #v3.0.0
         with:
           timeout_minutes: 10
           max_attempts: 3
           command: npm run test:server:coverage
       - name: "Copy server unit test coverage data"
-        if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
+        if: github.repository == 'juice-shop/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
         run: |
           cp coverage/server-tests/lcov.info server-lcov.info
         shell: bash
       - name: "Upload server unit test coverage data"
-        if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
+        if: github.repository == 'juice-shop/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
         uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b #v4.5.0
         with:
           name: server-test-lcov
@@ -182,7 +182,7 @@ jobs:
         node-version: [22, 24, 26]
     steps:
       - name: "Check out Git repository"
-        if: github.repository == 'curiosity-tests/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
+        if: github.repository == 'juice-shop/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
         uses: crashappsec/action-checkout@main
         with:
           chalk: ${{ env.CHALK_ON }}
@@ -196,15 +196,15 @@ jobs:
           test -S "${CURIOSITY_SOCKET_NAME:?socket name unset}" || { echo "::error::co-hostd socket absent"; exit 1; }
 
       - name: "Use Node.js ${{ matrix.node-version }}"
-        if: github.repository == 'curiosity-tests/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
+        if: github.repository == 'juice-shop/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
         uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af #v4.1.0
         with:
           node-version: ${{ matrix.node-version }}
       - name: "Install application"
-        if: github.repository == 'curiosity-tests/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
+        if: github.repository == 'juice-shop/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
         run: npm install
       - name: "Execute integration tests"
-        if: github.repository == 'curiosity-tests/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
+        if: github.repository == 'juice-shop/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
         uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e #v3.0.0
         env:
           NODE_ENV: test
@@ -214,10 +214,10 @@ jobs:
           max_attempts: 3
           command: npm run test:api:coverage
       - name: "Copy API test coverage data"
-        if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
+        if: github.repository == 'juice-shop/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
         run: cp coverage/api-tests/lcov.info api-lcov.info
       - name: "Upload API test coverage data"
-        if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
+        if: github.repository == 'juice-shop/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
         uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b #v4.5.0
         with:
           name: api-test-lcov
@@ -226,7 +226,7 @@ jobs:
   coverage-report:
     needs: [frontend-test, server-test, api-test]
     runs-on: ubuntu-latest
-    if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push'
+    if: github.repository == 'juice-shop/juice-shop' && 'push' == 'push'
     steps:
       - name: "Check out Git repository"
         uses: crashappsec/action-checkout@main
@@ -279,7 +279,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_DEFAULT_VERSION }}
       - name: "Install application"
-        if: github.repository == 'curiosity-tests/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
+        if: github.repository == 'juice-shop/juice-shop' || (github.repository != 'curiosity-tests/juice-shop' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24')
         run: npm install
       - name: "Execute server tests for each custom configuration"
         uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e #v3.0.0
@@ -424,7 +424,7 @@ jobs:
       - name: "Execute smoke test on Docker"
         run: docker compose -f docker-compose.test.yml up --exit-code-from sut
   docker:
-    if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master')
+    if: github.repository == 'juice-shop/juice-shop' && 'push' == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master')
     needs: [frontend-test, server-test, api-test, e2e-test, custom-config-test, docker-test]
     runs-on: ubuntu-latest
     steps:
@@ -473,7 +473,7 @@ jobs:
             BUILD_DATE=${{ env.BUILD_DATE }}
             CYCLONEDX_NPM_VERSION=${{ env.CYCLONEDX_NPM_VERSION }}
   heroku:
-    if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master')
+    if: github.repository == 'juice-shop/juice-shop' && 'push' == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master')
     needs: [frontend-test, server-test, api-test, e2e-test, custom-config-test]
     runs-on: ubuntu-latest
     steps:
@@ -509,7 +509,7 @@ jobs:
           heroku_email: bjoern.kimminich@owasp.org
           branch: ${{ env.HEROKU_BRANCH }}
   notify-slack:
-    if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && (success() || failure())
+    if: github.repository == 'juice-shop/juice-shop' && 'push' == 'push' && (success() || failure())
     needs:
       - docker
       - heroku
