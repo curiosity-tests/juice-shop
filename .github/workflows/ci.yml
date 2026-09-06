@@ -35,7 +35,7 @@ on:
 env:
   # The one variable that separates the arms: on baseline, action-checkout
   # skips its Set up Chalk step entirely.
-  CHALK_ON: ${{ github.event_name == 'workflow_dispatch' && inputs.leg != 'baseline' }}
+  CHALK_ON: ${{ inputs.leg == 'instrumented' }}
   NODE_DEFAULT_VERSION: 24
   NODE_OPTIONS: "--max_old_space_size=4096"
   CYCLONEDX_NPM_VERSION: '^2.0.0||^3.0.0||^4.0.0'   # keep in sync with package.json
@@ -112,13 +112,13 @@ jobs:
           max_attempts: 3
           command: npm run test:frontend:coverage
       - name: "Copy frontend unit test coverage data"
-        if: github.repository == 'curiosity-tests/juice-shop' && github.event_name == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
+        if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
         run: |
           cp frontend/coverage/frontend/lcov.info frontend-lcov.info
           sed -i s/SF:/SF:frontend\\//g frontend-lcov.info
         shell: bash
       - name: "Upload frontend unit test coverage data"
-        if: github.repository == 'curiosity-tests/juice-shop' && github.event_name == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
+        if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
         uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b #v4.5.0
         with:
           name: frontend-test-lcov
@@ -162,12 +162,12 @@ jobs:
           max_attempts: 3
           command: npm run test:server:coverage
       - name: "Copy server unit test coverage data"
-        if: github.repository == 'curiosity-tests/juice-shop' && github.event_name == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
+        if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
         run: |
           cp coverage/server-tests/lcov.info server-lcov.info
         shell: bash
       - name: "Upload server unit test coverage data"
-        if: github.repository == 'curiosity-tests/juice-shop' && github.event_name == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
+        if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
         uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b #v4.5.0
         with:
           name: server-test-lcov
@@ -214,10 +214,10 @@ jobs:
           max_attempts: 3
           command: npm run test:api:coverage
       - name: "Copy API test coverage data"
-        if: github.repository == 'curiosity-tests/juice-shop' && github.event_name == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
+        if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
         run: cp coverage/api-tests/lcov.info api-lcov.info
       - name: "Upload API test coverage data"
-        if: github.repository == 'curiosity-tests/juice-shop' && github.event_name == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
+        if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && matrix.os == 'ubuntu-latest' && matrix.node-version == '24'
         uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b #v4.5.0
         with:
           name: api-test-lcov
@@ -226,7 +226,7 @@ jobs:
   coverage-report:
     needs: [frontend-test, server-test, api-test]
     runs-on: ubuntu-latest
-    if: github.repository == 'curiosity-tests/juice-shop' && github.event_name == 'push'
+    if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push'
     steps:
       - name: "Check out Git repository"
         uses: crashappsec/action-checkout@main
@@ -424,7 +424,7 @@ jobs:
       - name: "Execute smoke test on Docker"
         run: docker compose -f docker-compose.test.yml up --exit-code-from sut
   docker:
-    if: github.repository == 'curiosity-tests/juice-shop' && github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master')
+    if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master')
     needs: [frontend-test, server-test, api-test, e2e-test, custom-config-test, docker-test]
     runs-on: ubuntu-latest
     steps:
@@ -473,7 +473,7 @@ jobs:
             BUILD_DATE=${{ env.BUILD_DATE }}
             CYCLONEDX_NPM_VERSION=${{ env.CYCLONEDX_NPM_VERSION }}
   heroku:
-    if: github.repository == 'curiosity-tests/juice-shop' && github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master')
+    if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master')
     needs: [frontend-test, server-test, api-test, e2e-test, custom-config-test]
     runs-on: ubuntu-latest
     steps:
@@ -509,7 +509,7 @@ jobs:
           heroku_email: bjoern.kimminich@owasp.org
           branch: ${{ env.HEROKU_BRANCH }}
   notify-slack:
-    if: github.repository == 'curiosity-tests/juice-shop' && github.event_name == 'push' && (success() || failure())
+    if: github.repository == 'curiosity-tests/juice-shop' && 'push' == 'push' && (success() || failure())
     needs:
       - docker
       - heroku
